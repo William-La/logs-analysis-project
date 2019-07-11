@@ -2,7 +2,7 @@
 
 logPathCount view:
 
-create view logPathCount as select path, count(*) from log where status = '200 OK'  group by path;
+create view logPathCount as select path, count(*) as numViews from log where status = '200 OK'  group by path;
 
 authorSlugs view:
 
