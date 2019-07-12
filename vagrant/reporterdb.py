@@ -2,6 +2,9 @@
 
 import psycopg2
 
+DBNAME = "news"
+
+
 
 
 def pop_articles():
@@ -24,4 +27,6 @@ def days_with_errors():
     """returns the days where more than one percent of request lead to errors"""
     db = psycopg2.connect(database= DBNAME)
     c = db.cursor()
-
+    c.execute("select to_char(total.time, 'FMMonth dd, yyyy') as time, (errors.requests * 100.0 / total.requests) as percentError from total, errors where total.time = errors.time and (errors.requests * 100.0 / total.requests) >= 1.0 order by percentError desc;")
+    return c.fetchall()
+    db.close()

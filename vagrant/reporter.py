@@ -1,7 +1,7 @@
 # coding: utf-8
 from reporterdb import pop_articles, pop_authors, days_with_errors
 
-DBNAME = "news"
+
 # format for answer to article question
 article_ans_format = '''"%s" — %d views\n'''
 
@@ -9,13 +9,13 @@ article_ans_format = '''"%s" — %d views\n'''
 author_ans_format = '''%s — %d views\n'''
 
 # format for answer to error question
-error_ans_format = '''"%s" — %d errors\n'''
+error_ans_format = '''"%s" — %.1f%% errors\n'''
 
 
 
 def main():
     """retrieves, formats, and prints the answers for the three reporter 
-    questions by calling popArticle(), popAuthors(), and daysWithErrors()."""
+    questions by calling pop_article(), pop_authors(), and days_with_errors()."""
 
     # Answer to the question "What are the most popular three articles of all time?"
     article_ans = "".join(article_ans_format % (title, numViews) for title, numViews in pop_articles())
@@ -28,8 +28,9 @@ def main():
     print(author_ans)
 
     # Answer to the question "On which days did more than 1% of requests lead to errors?"
-
-       
+    error_ans = "".join(error_ans_format % (time, percentError) for time, percentError in days_with_errors())
+    print("The day(s) where more than 1% of requests were errors were:")
+    print(error_ans)
 
 if __name__ == '__main__':
     main()
