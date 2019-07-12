@@ -4,7 +4,7 @@ import psycopg2
 
 
 
-def popArticles():
+def pop_articles():
     """returns the three most popular articles of all time"""
     db = psycopg2.connect(database= DBNAME)
     c = db.cursor()
@@ -12,7 +12,7 @@ def popArticles():
     return c.fetchall()
     db.close()
     
-def popAuthors():
+def pop_authors():
     """returns the three most popular authors of all time"""
     db = psycopg2.connect(database= DBNAME)
     c = db.cursor()
@@ -20,7 +20,7 @@ def popAuthors():
     return c.fetchall()
     db.close()
     
-def daysWithErrors():
+def days_with_errors():
     """returns the days where more than one percent of request lead to errors"""
     db = psycopg2.connect(database= DBNAME)
     c = db.cursor()
