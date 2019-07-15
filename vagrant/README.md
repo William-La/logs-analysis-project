@@ -1,4 +1,4 @@
-#Logs Analysis Project -- news reporter
+# news reporter log analysis project
 
 news reporter logs analysis project analyzes the data in the "news" SQL database provided by Udacity as part of the Full Stack Web Developer nanodegree course. It then provides answers to the following questions:
 
