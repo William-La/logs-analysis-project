@@ -73,3 +73,8 @@ python reporter.py
 ```
 
 The news reporter will then print out the top three articles, the top authors, and the days where atleast 1% of requests were errors into your terminal. To see the expected output, please view the output.txt file.
+
+Program Design
+---------------
+
+When the reporter.py file is run, it retrieves information from the three reporterdb.py methods, formats the answers, and then prints the answers. The methods in the reporterdb.py file obtain the information required to answer the reporter's questions by connecting to the "news" database, creating a cursor, running a sql query specific to each question, and returning the output to the queries. 
