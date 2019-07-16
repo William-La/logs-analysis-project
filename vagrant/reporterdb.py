@@ -6,35 +6,43 @@ DBNAME = "news"
 
 
 def pop_articles():
-    """returns the three most popular articles of all time"""
-    db = psycopg2.connect(database=DBNAME)
-    c = db.cursor()
-    c.execute("""select articles.title, numViews from articles, logPathCount
-                 where logPathCount.path = '/article/' || articles.slug
-                 order by numViews desc limit 3;""")
-    return c.fetchall()
-    db.close()
+    """return the three most popular articles of all time."""
+    query = """SELECT articles.title, numViews
+                FROM articles, logPathCount
+                WHERE logPathCount.path = '/article/' || articles.slug
+                ORDER BY numViews DESC
+                LIMIT 3;"""
+    return database_helper(query)
 
 
 def pop_authors():
-    """returns the three most popular authors of all time"""
-    db = psycopg2.connect(database=DBNAME)
-    c = db.cursor()
-    c.execute("""select name, sum(numViews) as numViews from authorSlugs,
-                 logPathCount where logPathCount.path = '/article/' ||
-                 authorSlugs.slug group by name order by numViews desc;""")
-    return c.fetchall()
-    db.close()
+    """return the three most popular authors of all time."""
+    query = """SELECT name, sum(numViews) AS numViews
+                FROM authorSlugs, logPathCount
+                WHERE logPathCount.path = '/article/' || authorSlugs.slug
+                GROUP BY name
+                ORDER BY numViews DESC;"""
+    return database_helper(query)
 
 
 def days_with_errors():
-    """returns days where more than 1% of request lead to errors"""
+    """return days where more than 1% of request lead to errors."""
+    query = """SELECT to_char(total.time, 'FMMonth dd, yyyy') AS time,
+                    (errors.requests * 100.0 / total.requests) as percentError
+                FROM total, errors
+                WHERE total.time = errors.time
+                AND (errors.requests * 100.0 / total.requests) >= 1.0
+                ORDER BY percentError DESC;"""
+    return database_helper(query)
+
+
+def database_helper(query):
+    """take in a SQL query, establishe a connection to the news
+    database, execute the query, and return the results
+    """
     db = psycopg2.connect(database=DBNAME)
     c = db.cursor()
-    c.execute("""select to_char(total.time, 'FMMonth dd, yyyy') as
-                 time, (errors.requests * 100.0 / total.requests) as
-                 percentError from total, errors where total.time = errors.time
-                 and (errors.requests * 100.0 / total.requests) >= 1.0 order by
-                 percentError desc;""")
-    return c.fetchall()
+    c.execute(query)
+    results = c.fetchall()
     db.close()
+    return results
