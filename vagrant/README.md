@@ -1,6 +1,6 @@
 # news reporter log analysis project
 
-news reporter logs analysis project analyzes the data in the "news" SQL database provided by Udacity as part of the Full Stack Web Developer nanodegree course. It then provides answers to the following questions:
+news reporter logs analysis project analyzes the data in the "news" PostgreSQL database, which is a mock database modeled for a news website, provided by Udacity as part of the Full Stack Web Developer nanodegree course. The reporter then provides answers to the following questions:
 
 1. "What are the most popular three articles of all time?"
 2. "Who are the most popular article authors of all time?"
@@ -11,7 +11,7 @@ Set up
 
 This project requires a linux server to be able to analyze the "news" SQL database. Using VirtualBox and Vagrant will allow us to run that linux server on a virtual machine. For more information on the required set up, software, and files for this project, please visit [this Udacity github page](https://github.com/udacity/fullstack-nanodegree-vm). 
 
-The "news" database from Udacity's Full Stack Web Developer nanodegree is also required. Once the data is downloaded, place the `.sql` in the vagrant directory. To load the data, you must have the virtual machine online and be logged in with the commands:
+[The "news" database](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip) from Udacity's Full Stack Web Developer nanodegree is also required. Once the data is downloaded, unzip the file and then place the `.sql` file in the vagrant directory. To load the data, you must have the virtual machine online and be logged in with the commands:
 
 ```terminal
 vagrant up
@@ -35,32 +35,46 @@ To create these views, you must be in the psql news envinroment before using the
 psql news
 ```
 
-####logPathCount view:
+#### logPathCount view:
 
 Counts the number of successful requests to a specific paths.
 ```sql
-create view logPathCount as select path, count(*) as numViews from log where status = '200 OK'  group by path;
+CREATE VIEW logPathCount AS
+SELECT path, count(*) AS numViews
+FROM log
+WHERE status = '200 OK'
+GROUP BY path;
 ```
 
-####authorSlugs view:
+#### authorSlugs view:
 
 Pairs the authors' names with the slugs of their articles. 
 ```sql
-create view authorSlugs as select name, slug from authors, articles where authors.id = articles.author;
+CREATE VIEW authorSlugs AS
+SELECT name, slug
+FROM authors, articles
+WHERE authors.id = articles.author;
 ```
 
-####total view:
+#### total view:
 
 Counts the number of requests made on a specific date.
 ```sql
-create view total as select time::date, count(*) as requests from log group by time::date;
+CREATE VIEW total AS
+SELECT time::date, count(*) AS requests
+FROM log
+GROUP BY time::date;
 ```
 
-####errors view:
+#### errors view:
 
 Counts the number of error requests on a specific date.
 ```sql
-create view errors as select time::date, count(*) as requests from log where status = '404 NOT FOUND' group by time::date;
+CREATE VIEW errors AS
+SELECT time::date, count(*) AS requests
+FROM log
+WHERE status = '404 NOT FOUND'
+GROUP BY time::date;
 ```
 
 Usage
